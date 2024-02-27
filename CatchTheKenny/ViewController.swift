@@ -74,6 +74,7 @@ class ViewController: UIViewController {
         
         hideTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(hideKenny), userInfo: nil, repeats: true)
         
+        
     }
     
     @objc func hideKenny() {
@@ -93,10 +94,32 @@ class ViewController: UIViewController {
     @objc func countdown(){
         counter -= 1
         timeText.text = String(counter)
+        
         if(counter == 0){
             timer.invalidate()
             hideTimer.invalidate()
-            timeText.text = "Time is over!"
+            
+            for kenny in kennyArray {
+                kenny.isHidden = true
+            }
+            
+            let alert = UIAlertController(title: "Time's Up!", message: "Do you want to play again", preferredStyle: UIAlertController.Style.alert)
+            let okBtn = UIAlertAction(title: "OK", style: UIAlertAction.Style.cancel, handler: nil)
+            let replayBtn = UIAlertAction(title: "Replay", style: UIAlertAction.Style.default) { UIAlertAction in
+                //replay button
+                self.counter = 10
+                self.timeText.text = String(self.counter)
+                self.score = 0
+                self.scoreText.text = "Score : \(self.score)"
+                
+                self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.countdown), userInfo: nil, repeats: true)
+                
+                self.hideTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(self.hideKenny), userInfo: nil, repeats: true)
+                
+            }
+            alert.addAction(okBtn)
+            alert.addAction(replayBtn)
+            self.present(alert, animated: true, completion: nil)
         }
     }
     
