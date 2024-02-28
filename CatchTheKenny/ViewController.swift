@@ -28,6 +28,7 @@ class ViewController: UIViewController {
     
     //variables
     var score = 0
+    var highscore = 0
     var timer = Timer()
     var hideTimer = Timer()
     var counter = 10
@@ -74,6 +75,8 @@ class ViewController: UIViewController {
         
         hideTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(hideKenny), userInfo: nil, repeats: true)
         
+        let storedHighScore = UserDefaults.standard.object(forKey: "highscore")
+        highScoreText.text = "High Score : \(storedHighScore ?? 0)"
         
     }
     
@@ -98,6 +101,13 @@ class ViewController: UIViewController {
         if(counter == 0){
             timer.invalidate()
             hideTimer.invalidate()
+            
+            if(score > highscore){
+                highscore = score
+                highScoreText.text = "High Score : \(highscore)"
+            }
+            
+            UserDefaults.standard.set(highscore, forKey: "highscore")
             
             for kenny in kennyArray {
                 kenny.isHidden = true
